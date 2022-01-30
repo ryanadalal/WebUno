@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/index.css">
+    <title>SocketTest</title>
+  </head>
+  <body>
+    <h1>Testing Socket</h1>
+
+    <ul id="board">
+      <li><img src="/cards/blue_0_large.png"/></li>
+
+    </ul>
+
+    <script src="../socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      {
+        if(r < 40)
+          c['doc'].innerText = c['color'] + ' ' + c['number'];
+        else if(r < 52)
+          c['doc'].innerText = c['color'] + ' ' + c['type']
+        else
+          c['doc'].innerText = c['type'];
+        document.getElementById('board').appendChild(c['doc'])
+        c['doc'].addEventListener('click', function(e){
+          socket.emit('box', this.innerText);
+        });
+        cards.push(c);
+      }
+      socket.on('madeMove', function(move){
+        boxes[move['spot']].innerText = move['xoro'];
+        if( move['xoro'] == 'x'){
+          boxes[move['spot']].classList.remove('o');
+          boxes[move['spot']].classList.add('x');
+        }
+        else{
+          boxes[move['spot']].classList.add('o');
+          boxes[move['spot']].classList.remove('x');
+        }
+      });
+
+      socket.on('reset', function(){
+        for (var i = 0; i < boxes.length; i ++){
+          boxes[i].innerText = "";
+        }        
+      });
+    </script>
+  </body>
+</html>
