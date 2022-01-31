@@ -10,44 +10,42 @@
   <body>
     <h1>Testing Socket</h1>
 
-    <ul id="board">
-      <li><img src="/cards/blue_0_large.png"/></li>
+    <ul id="cardList">
 
     </ul>
 
     <script src="../socket.io/socket.io.js"></script>
     <script>
       var socket = io();
-      {
-        if(r < 40)
-          c['doc'].innerText = c['color'] + ' ' + c['number'];
-        else if(r < 52)
-          c['doc'].innerText = c['color'] + ' ' + c['type']
-        else
-          c['doc'].innerText = c['type'];
-        document.getElementById('board').appendChild(c['doc'])
-        c['doc'].addEventListener('click', function(e){
-          socket.emit('box', this.innerText);
-        });
-        cards.push(c);
-      }
-      socket.on('madeMove', function(move){
-        boxes[move['spot']].innerText = move['xoro'];
-        if( move['xoro'] == 'x'){
-          boxes[move['spot']].classList.remove('o');
-          boxes[move['spot']].classList.add('x');
-        }
-        else{
-          boxes[move['spot']].classList.add('o');
-          boxes[move['spot']].classList.remove('x');
-        }
+      var cid;
+      var number = -1;
+
+      socket.on('number', function(num){
+        if(number == -1)
+          number = num;
+      });
+      socket.on('cardList', function(players){
+        loadCards(players[number]);     
       });
 
-      socket.on('reset', function(){
-        for (var i = 0; i < boxes.length; i ++){
-          boxes[i].innerText = "";
-        }        
-      });
+      function loadCards(cards){
+        for (var i = 0; i < cards.length; i ++){
+          var c = cards[i];
+          if(c.type == 'normal')
+            cid = c.color + c.number;
+          else if(c.type == '+4' || c.type == 'color')
+            cid = c.type;
+          else
+            cid = c.color + c.type;
+          var card = document.createElement("img");
+          card.src = '/cards/' + cid + '.png';
+          card.id = cid;
+          document.getElementById('cardList').appendChild(card);
+          card.addEventListener('click', function(e){
+            socket.emit('box', this.id);
+          });
+        }
+      }
     </script>
   </body>
 </html>
