@@ -5,6 +5,8 @@ const http = require("http");
 const server = http.createServer(app);
 
 const { Server } = require("socket.io");
+const { checkServerIdentity } = require("tls");
+const { threadId } = require("worker_threads");
 const io = new Server(server);
 
 app.use(express.static(__dirname + '/client'));
@@ -24,6 +26,11 @@ io.on('connection', socket => {
   sendCards();
   socket.on('disconnect', () => {
     io.emit('reset');
+  });
+  socket.on('cardClicked', (cid, user) => {
+    //implement code for when a card is clicked
+    console.log(cid);
+    console.log(user);
   });
 });
 function sendCards(){
@@ -52,8 +59,24 @@ class Game{
     else
       this.turn += dir;
   }
-  run(){
-    
+  checkMove(cid, user){
+    if(user == this.turn){
+      if(cid.includes(this.color)){
+        this.number = parseInt(cid[cid.length - 1]);
+      }
+      else if(cid.includes(this.number)){
+        this.color = cid.substring(0, cid.length - 1);
+      }
+      else if((number == -1 && cid.includes('+2')) || (number == -2 && cid.includes('reverse')) || (number == -3 && cid.includes('skip'))){
+        
+      }
+      else if(cid.includes('+4') && this.number == -4){
+        
+      }
+      else if(cid.includes('color') && this.number == -5){
+
+      }
+    }
   }
 }
 

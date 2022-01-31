@@ -42,7 +42,7 @@
           card.id = cid;
           document.getElementById('cardList').appendChild(card);
           card.addEventListener('click', function(e){
-            socket.emit('box', this.id);
+            socket.emit('cardClicked', this.id, number);
           });
         }
       }
