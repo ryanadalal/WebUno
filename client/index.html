@@ -11,8 +11,8 @@
     <h1>Testing Socket</h1>
 
     <div id="topSection">
-      <img id="topCard" />
-      <img id="backCard" class="backCard" src="/cards/back.png">
+      <img id="currentCard" src="" class="topCard" />
+      <img id="backCard" class="topCard" src="/cards/back.png">
       <div id="colorPicker">
         <button class="red">red</button>
         <button class="blue">blue</button>
@@ -33,6 +33,7 @@
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
+      var topCard = document.getElementById("currentCard");
 
       socket.on('number', function(num){
         if(number == -1)
@@ -57,10 +58,8 @@
           cid = c.type;
         else
           cid = c.color + c.type;
-        var card = document.getElementById("topCard");
-        card.src = '/cards/' + cid + '.png';
-        card.id = cid;
-        card.classList.add('topCard');
+        topCard.src = '/cards/' + cid + '.png';
+        topCard.id = cid;
       }
       function loadCards(cards){
         reset();

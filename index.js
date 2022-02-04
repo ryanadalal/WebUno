@@ -164,7 +164,7 @@ class Game{
 class Player{
   constructor(){
     this.cards = [];
-    for(var i = 0; i < 7; i ++){
+    for(var i = 0; i < 20; i ++){
       this.getNewCard();
     }
   }
@@ -180,6 +180,7 @@ class Player{
     this.getNewCard();
   }
   removeCard(c){
+    var done = false;
     function checkCardsSame(c1, c2){
       for(let key in c1){
         if(!(key in c2 )) 
@@ -187,7 +188,13 @@ class Player{
         if(c1[key]!==c2[key])
           return false;
       }
-      return true;
+      if(!done){
+        done = true;
+        return true;
+      }
+      else{
+        return false;
+      }
     }
     this.cards = this.cards.filter(function(index){
       return !checkCardsSame(index, c);
