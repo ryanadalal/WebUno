@@ -47,7 +47,7 @@
       }
       function showCurrentCard(c){
         if(c.type == 'normal')
-          cid = c.color + c.number;
+          cid = c.color + '' + c.number;
         else if(c.type == '+4' || c.type == 'color')
           cid = c.type;
         else

@@ -24,7 +24,7 @@ io.on('connection', socket => {
   pNum ++;
   players.push(new Player());
   game = new Game(players);
-  sendCards({color: game.color, type: 'normal', number: game.number});
+  sendCards({type: 'normal', color: game.color, number: game.number});
   socket.on('disconnect', () => {
     io.emit('reset');
   });
@@ -82,6 +82,7 @@ class Game{
           c.type = 'normal';
           c.number = this.number;
         }
+        
         else if(cid.includes('+2')){
           addTwo(this);
         }
@@ -97,6 +98,7 @@ class Game{
         this.color = cid.substring(0, cid.length - 1);
         c.number = this.number;
         c.color = this.color;
+        c.type = 'normal';
         success = true;
       }
       else if(this.number == -1 && cid.includes('+2')){
@@ -148,6 +150,7 @@ class Game{
       }
       if(success){
         this.turn = this.nextPlayer();
+        this.players[this.turn].removeCard(c);
         sendCards(c);
       }
     }
@@ -171,6 +174,20 @@ class Player{
   take2(){
     this.getNewCard();
     this.getNewCard();
+  }
+  removeCard(c){
+    function checkCardsSame(c1, c2){
+      for(let key in c1){
+        if(!(key in c2 )) 
+          return false;
+        if(c1[key]!==c2[key])
+          return false;
+      }
+      return true;
+    }
+    this.cards = this.cards.filter(function(index){
+      return !checkCardsSame(index, c);
+    });
   }
   getNewCard(){
     var r = Math.floor(Math.random() * 55);
