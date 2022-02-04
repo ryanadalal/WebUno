@@ -1,20 +1,22 @@
-#board{
+#cardList{
+  text-align: center;
+  margin: 5%;
+}
+
+.card{
+  width: 15%; 
+  height: auto;
+  margin: -2% -1%;
+}
+
+#topSection{
   text-align: center;
 }
-#board button{
-  font-size: 50px;
-  margin: 10px;
-  width: 80px;
-  height: 80px;
-  background-color: lightblue;
-  position: relative;
-  vertical-align:top;
+.topCard{
+  width: 20%;
+  margin: 1%;
 }
-
-button.x{
-  color: darkred;
-}
-
-button.o{
-  color: navy;
+.backCard{
+  width: 20%;
+  margin: 1%;
 }

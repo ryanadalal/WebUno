@@ -10,7 +10,9 @@
   <body>
     <h1>Testing Socket</h1>
 
-    <div id='currentCard'></div>
+    <div id='topSection'>
+      <img id="topCard" />
+    </div>
     <ul id="cardList">
 
     </ul>
@@ -20,6 +22,12 @@
       var socket = io();
       var cid;
       var number = -1;
+      var backCard = document.createElement('img');
+      backCard.classList.add('backCard');
+      backCard.src = '/cards/back.png';
+      backCard.addEventListener('click', function(e){
+        socket.emit('takeCard', number);
+      });
 
       socket.on('number', function(num){
         if(number == -1)
@@ -47,8 +55,10 @@
         var card = document.createElement("img");
         card.src = '/cards/' + cid + '.png';
         card.id = cid;
-        document.getElementById('currentCard').innerHTML = ' ';
-        document.getElementById('currentCard').appendChild(card);
+        card.classList.add('topCard');
+        document.getElementById('topSection').innerHTML = '';
+        document.getElementById('topSection').appendChild(card);
+        document.getElementById('topSection').appendChild(backCard);
       }
       function loadCards(cards){
         reset();
@@ -63,6 +73,7 @@
           var card = document.createElement("img");
           card.src = '/cards/' + cid + '.png';
           card.id = cid;
+          card.classList.add('card');
           document.getElementById('cardList').appendChild(card);
           card.addEventListener('click', function(e){
             socket.emit('cardClicked', this.id, number);
