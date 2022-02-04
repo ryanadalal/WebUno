@@ -13,11 +13,11 @@
     <div id="topSection">
       <img id="currentCard" src="" class="topCard" />
       <img id="backCard" class="topCard" src="/cards/back.png">
-      <div id="colorPicker">
-        <button class="red">red</button>
-        <button class="blue">blue</button>
-        <button class="green">green</button>
-        <button class="yellow">yellow</button>
+      <div id="colorPicker" class="hide">
+        <button id="chooseRed" class="red">red</button>
+        <button id="chooseBlue" class="blue">blue</button>
+        <button id="chooseGreen" class="green">green</button>
+        <button id="chooseYellow" class="yellow">yellow</button>
       </ul>
     </div>
     <ul id="cardList">
@@ -33,8 +33,20 @@
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
+      var colorPicker = document.getElementById('colorPicker');
+      for(var i = 0; i < colorPicker.childNodes.length; i ++){
+        colorPicker.childNodes[i].addEventListener('click', function(){
+          socket.emit('selectedColor', this.id.slice(6).toLowerCase());
+          colorPicker.classList.add('hide');
+        });
+      }
       var topCard = document.getElementById("currentCard");
 
+      socket.on('pickColor', function(num){
+        if(number == num){
+          document.getElementById('colorPicker').classList.remove('hide');
+        }
+      });
       socket.on('number', function(num){
         if(number == -1)
           number = num;

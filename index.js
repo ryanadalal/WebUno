@@ -34,6 +34,11 @@ io.on('connection', socket => {
     //implement code for when a card is clicked
     game.drawCard(number);
   });
+  socket.on('selectedColor', (color) => {
+    //implement code for when a card is clicked
+    console.log(color);
+    game.setColor(color);
+  });
 });
 function sendCards(cid){
   var cardList = [];
@@ -41,6 +46,9 @@ function sendCards(cid){
     cardList.push(game.players[i].outputCards());
   io.emit('currentCard', cid);
   io.emit('cardList', cardList);
+}
+function getColor(num){
+  io.emit('pickColor', num);
 }
 
 class Game{
@@ -50,6 +58,9 @@ class Game{
     this.dir = 1;
     this.color = 'red';
     this.number = 0;
+  }
+  setColor(color){
+    this.color = color;
   }
   reverse(){
     this.dir *= -1;
@@ -112,9 +123,11 @@ class Game{
         skipNext(this);
       }
       else if(cid.includes('+4')){
+        getColor(this.turn);
         addFour(this);
       }
       else if(cid.includes('color')){
+        getColor(this.turn);
         c.type = 'color';
         success = true;
       }
@@ -164,7 +177,7 @@ class Game{
 class Player{
   constructor(){
     this.cards = [];
-    for(var i = 0; i < 20; i ++){
+    for(var i = 0; i < 7; i ++){
       this.getNewCard();
     }
   }
