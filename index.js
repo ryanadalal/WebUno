@@ -68,8 +68,11 @@ class Game{
     }
   }
   drawCard(n){
-    this.players[n].getNewCard();
-    sendCards();
+    if(n == this.turn){
+      this.players[n].getNewCard();
+      this.turn = this.nextPlayer();
+      sendCards();
+    }
   }
   checkMove(cid, user){
     var c = {};
@@ -117,19 +120,20 @@ class Game{
         c.type = 'color';
         success = true;
       }
+      var skipExtra = false;
       function addTwo(g){
         g.number = -1;
         g.players[g.nextPlayer()].take2();
-        g.turn = g.nextPlayer();
         g.color = cid.substring(0, cid.length - 2);
         c.color = g.color;
         c.type = '+2';
+        skipExtra = true;
         success = true;
       }
       function addFour(g){
         g.players[g.nextPlayer()].take4();
-        g.turn = g.nextPlayer();
         c.type = '+4';
+        skipExtra = true;
         success = true;
       }
       function reverseOrder(g){
@@ -142,15 +146,17 @@ class Game{
       }
       function skipNext(g){
         g.number == -3;
-        g.turn = g.nextPlayer();
         g.color = cid.substring(0, cid.length - 4);
         c.color = g.color;
         c.type = 'skip';
+        skipExtra = true;
         success = true;
       }
       if(success){
-        this.turn = this.nextPlayer();
+        if(skipExtra)
+          this.turn = this.nextPlayer();
         this.players[this.turn].removeCard(c);
+        this.turn = this.nextPlayer();
         sendCards(c);
       }
     }
