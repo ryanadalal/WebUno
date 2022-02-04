@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 
 const http = require("http");
+const { send } = require("process");
 const server = http.createServer(app);
 
 const { Server } = require("socket.io");
@@ -29,8 +30,7 @@ io.on('connection', socket => {
   });
   socket.on('cardClicked', (cid, user) => {
     //implement code for when a card is clicked
-    console.log(cid);
-    console.log(user);
+    game.checkMove(cid, user);
   });
 });
 function sendCards(){
@@ -53,30 +53,52 @@ class Game{
   }
   nextPlayer(){
     if (this.dir == -1 && this.turn == 0)
-      this.turn = this.players.length - 1;
+      return this.players.length - 1;
     else if(this.dir == 1 && this.turn == this.players.length + 1)
-      this.turn = 0;
+      return 0;
     else
-      this.turn += dir;
+      return this.turn + dir;
   }
   checkMove(cid, user){
     if(user == this.turn){
       if(cid.includes(this.color)){
-        this.number = parseInt(cid[cid.length - 1]);
+        if (parseInt(cid[cid.length - 1]) != NaN)
+          this.number = parseInt(cid[cid.length - 1]);
+        else if(cid.includes('+2')){
+          this.number = -1;
+        }
+        else if(cid.includes('reverse')){
+          this.number = -2;
+        }
+        else if(cid.includes('skip')){
+          this.number == -3
+        }
       }
       else if(cid.includes(this.number)){
         this.color = cid.substring(0, cid.length - 1);
       }
-      else if((number == -1 && cid.includes('+2')) || (number == -2 && cid.includes('reverse')) || (number == -3 && cid.includes('skip'))){
-        
+      else if((number == -1 && cid.includes('+2'))){
+        this.players(this.nextPlayer()).take2();
+        this.color = cid.substring(0, cid.length - 2);
+        this.turn = this.nextPlayer();
       }
-      else if(cid.includes('+4') && this.number == -4){
-        
+      else if(number == -2 && cid.includes('reverse')){
+        this.reverse();
+        this.color = cid.substring(0, cid.length - 7);
       }
-      else if(cid.includes('color') && this.number == -5){
-
+      else if(number == -3 && cid.includes('skip')){
+        this.color = cid.substring(0, cid.length - 4);
+        this.turn = this.nextPlayer();
+      }
+      else if(cid.includes('+4')){
+        this.players(this.nextPlayer()).take4();
+        this.turn = this.nextPlayer();
+      }
+      else if(cid.includes('color')){
+        this.turn = this.nextPlayer();
       }
     }
+    sendCards();
   }
 }
 

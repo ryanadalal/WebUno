@@ -27,6 +27,9 @@
       socket.on('cardList', function(players){
         loadCards(players[number]);     
       });
+      socket.on('reset', function(){
+        document.getElementById('cardList').innerHTML = ' ';
+      });
 
       function loadCards(cards){
         for (var i = 0; i < cards.length; i ++){
