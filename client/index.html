@@ -10,8 +10,15 @@
   <body>
     <h1>Testing Socket</h1>
 
-    <div id='topSection'>
+    <div id="topSection">
       <img id="topCard" />
+      <img id="backCard" class="backCard" src="/cards/back.png">
+      <div id="colorPicker">
+        <button class="red">red</button>
+        <button class="blue">blue</button>
+        <button class="green">green</button>
+        <button class="yellow">yellow</button>
+      </ul>
     </div>
     <ul id="cardList">
 
@@ -22,9 +29,7 @@
       var socket = io();
       var cid;
       var number = -1;
-      var backCard = document.createElement('img');
-      backCard.classList.add('backCard');
-      backCard.src = '/cards/back.png';
+      var backCard = document.getElementById("backCard");
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
@@ -52,13 +57,10 @@
           cid = c.type;
         else
           cid = c.color + c.type;
-        var card = document.createElement("img");
+        var card = document.getElementById("topCard");
         card.src = '/cards/' + cid + '.png';
         card.id = cid;
         card.classList.add('topCard');
-        document.getElementById('topSection').innerHTML = '';
-        document.getElementById('topSection').appendChild(card);
-        document.getElementById('topSection').appendChild(backCard);
       }
       function loadCards(cards){
         reset();

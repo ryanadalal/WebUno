@@ -6,8 +6,6 @@ const { send } = require("process");
 const server = http.createServer(app);
 
 const { Server } = require("socket.io");
-const { checkServerIdentity } = require("tls");
-const { threadId } = require("worker_threads");
 const io = new Server(server);
 
 app.use(express.static(__dirname + '/client'));

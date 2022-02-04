@@ -20,3 +20,26 @@
   width: 20%;
   margin: 1%;
 }
+
+.hide{
+  display: none;
+}
+
+#colorPicker button{
+  width: 10%;
+  font-size: 300%;
+  margin: 2%;
+}
+
+.blue{
+  background-color: #C7F8FF;
+}
+.red{
+  background-color: #FF9494;
+}
+.green{
+  background-color: #C8F9E4;
+}
+.yellow{
+  background-color: #F3ECC9;
+}
