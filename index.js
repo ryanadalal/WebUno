@@ -24,7 +24,7 @@ io.on('connection', socket => {
   pNum ++;
   players.push(new Player());
   game = new Game(players);
-  sendCards();
+  sendCards({color: game.color, type: 'normal', number: game.number});
   socket.on('disconnect', () => {
     io.emit('reset');
   });
@@ -33,18 +33,19 @@ io.on('connection', socket => {
     game.checkMove(cid, user);
   });
 });
-function sendCards(){
+function sendCards(cid){
   var cardList = [];
-  for(var i = 0; i < players.length; i ++)
-    cardList.push(players[i].outputCards());
-  io.emit('cardList', cardList)
+  for(var i = 0; i < game.players.length; i ++)
+    cardList.push(game.players[i].outputCards());
+  io.emit('currentCard', cid);
+  io.emit('cardList', cardList);
 }
 
 class Game{
   constructor(players){
     this.players = players;
     this.turn = 0;
-    this.dir = 0;
+    this.dir = 1;
     this.color = 'red';
     this.number = 0;
   }
@@ -52,53 +53,96 @@ class Game{
     this.dir *= -1;
   }
   nextPlayer(){
-    if (this.dir == -1 && this.turn == 0)
+    if (this.dir == -1 && this.turn == 0){
       return this.players.length - 1;
-    else if(this.dir == 1 && this.turn == this.players.length + 1)
+    }
+    else if(this.dir == 1 && this.turn == this.players.length - 1){
       return 0;
-    else
-      return this.turn + dir;
+    }
+    else{
+      return this.turn + this.dir;
+    }
   }
   checkMove(cid, user){
+    var c = {};
     if(user == this.turn){
+      var success = false;
       if(cid.includes(this.color)){
-        if (parseInt(cid[cid.length - 1]) != NaN)
+        c.color = this.color;
+        if (!isNaN(parseInt(cid[cid.length - 1])) && cid[cid.length - 2] != '+'){
           this.number = parseInt(cid[cid.length - 1]);
+          c.type = 'normal';
+          c.number = this.number;
+        }
         else if(cid.includes('+2')){
-          this.number = -1;
+          addTwo(this);
         }
         else if(cid.includes('reverse')){
-          this.number = -2;
+          reverseOrder(this);
         }
         else if(cid.includes('skip')){
-          this.number == -3
+          skipNext(this);
         }
+        success = true;
       }
       else if(cid.includes(this.number)){
         this.color = cid.substring(0, cid.length - 1);
+        c.number = this.number;
+        c.color = this.color;
+        success = true;
       }
-      else if((number == -1 && cid.includes('+2'))){
-        this.players(this.nextPlayer()).take2();
-        this.color = cid.substring(0, cid.length - 2);
-        this.turn = this.nextPlayer();
+      else if(this.number == -1 && cid.includes('+2')){
+        addTwo(this);
       }
-      else if(number == -2 && cid.includes('reverse')){
-        this.reverse();
-        this.color = cid.substring(0, cid.length - 7);
+      else if(this.number == -2 && cid.includes('reverse')){
+        reverseOrder(this);
       }
-      else if(number == -3 && cid.includes('skip')){
-        this.color = cid.substring(0, cid.length - 4);
-        this.turn = this.nextPlayer();
+      else if(this.number == -3 && cid.includes('skip')){
+        skipNext(this);
       }
       else if(cid.includes('+4')){
-        this.players(this.nextPlayer()).take4();
-        this.turn = this.nextPlayer();
+        addFour(this);
       }
       else if(cid.includes('color')){
+        c.type = 'color';
+        success = true;
+      }
+      function addTwo(g){
+        g.number = -1;
+        g.players[g.nextPlayer()].take2();
+        g.turn = g.nextPlayer();
+        g.color = cid.substring(0, cid.length - 2);
+        c.color = g.color;
+        c.type = '+2';
+        success = true;
+      }
+      function addFour(g){
+        g.players[g.nextPlayer()].take4();
+        g.turn = g.nextPlayer();
+        c.type = '+4';
+        success = true;
+      }
+      function reverseOrder(g){
+        g.number = -2;
+        g.reverse();
+        g.color = cid.substring(0, cid.length - 7);
+        c.color = g.color;
+        c.type = 'reverse';
+        success = true;
+      }
+      function skipNext(g){
+        g.number == -3;
+        g.turn = g.nextPlayer();
+        g.color = cid.substring(0, cid.length - 4);
+        c.color = g.color;
+        c.type = 'skip';
+        success = true;
+      }
+      if(success){
         this.turn = this.nextPlayer();
+        sendCards(c);
       }
     }
-    sendCards();
   }
 }
 

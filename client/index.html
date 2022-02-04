@@ -10,6 +10,7 @@
   <body>
     <h1>Testing Socket</h1>
 
+    <div id='currentCard'></div>
     <ul id="cardList">
 
     </ul>
@@ -27,11 +28,30 @@
       socket.on('cardList', function(players){
         loadCards(players[number]);     
       });
-      socket.on('reset', function(){
-        document.getElementById('cardList').innerHTML = ' ';
+      socket.on('currentCard', function(cid){
+        showCurrentCard(cid);    
       });
-
+      socket.on('reset', function(){
+        reset();
+      });
+      function reset(){
+        document.getElementById('cardList').innerHTML = ' ';
+      }
+      function showCurrentCard(c){
+        if(c.type == 'normal')
+          cid = c.color + c.number;
+        else if(c.type == '+4' || c.type == 'color')
+          cid = c.type;
+        else
+          cid = c.color + c.type;
+        var card = document.createElement("img");
+        card.src = '/cards/' + cid + '.png';
+        card.id = cid;
+        document.getElementById('currentCard').innerHTML = ' ';
+        document.getElementById('currentCard').appendChild(card);
+      }
       function loadCards(cards){
+        reset();
         for (var i = 0; i < cards.length; i ++){
           var c = cards[i];
           if(c.type == 'normal')
