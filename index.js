@@ -36,7 +36,7 @@ io.on('connection', socket => {
   });
   socket.on('selectedColor', (color) => {
     //implement code for when a card is clicked
-    console.log(color);
+    game.stopWaiting();
     game.setColor(color);
   });
 });
@@ -58,12 +58,16 @@ class Game{
     this.dir = 1;
     this.color = 'red';
     this.number = 0;
+    this.waiting = false;
   }
   setColor(color){
     this.color = color;
   }
   reverse(){
     this.dir *= -1;
+  }
+  stopWaiting(){
+    this.waiting = false;
   }
   nextPlayer(){
     if (this.dir == -1 && this.turn == 0){
@@ -77,7 +81,7 @@ class Game{
     }
   }
   drawCard(n){
-    if(n == this.turn){
+    if(n == this.turn && !this.waiting){
       this.players[n].getNewCard();
       this.turn = this.nextPlayer();
       sendCards();
@@ -85,7 +89,7 @@ class Game{
   }
   checkMove(cid, user){
     var c = {};
-    if(user == this.turn){
+    if(user == this.turn && !this.waiting){
       var success = false;
       if(cid.includes(this.color)){
         c.color = this.color;
@@ -123,10 +127,12 @@ class Game{
         skipNext(this);
       }
       else if(cid.includes('+4')){
+        this.waiting = true;
         getColor(this.turn);
         addFour(this);
       }
       else if(cid.includes('color')){
+        this.waiting = true;
         getColor(this.turn);
         c.type = 'color';
         success = true;
