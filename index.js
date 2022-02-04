@@ -32,6 +32,10 @@ io.on('connection', socket => {
     //implement code for when a card is clicked
     game.checkMove(cid, user);
   });
+  socket.on('takeCard', (number) => {
+    //implement code for when a card is clicked
+    game.drawCard(number);
+  });
 });
 function sendCards(cid){
   var cardList = [];
@@ -62,6 +66,10 @@ class Game{
     else{
       return this.turn + this.dir;
     }
+  }
+  drawCard(n){
+    this.players[n].getNewCard();
+    sendCards();
   }
   checkMove(cid, user){
     var c = {};
