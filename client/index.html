@@ -5,12 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/index.css">
-    <title>SocketTest</title>
+    <link rel="icon" type="image/x-icon" href="/cards/logo.png">
+    <title>Uno</title>
   </head>
   <body>
-    <h1>Testing Socket</h1>
+    <h1 id="title">Crazy 8's Uno</h1>
 
     <div id="topSection">
+      <div id="otherPlayers"></div>
       <img id="currentCard" src="" class="topCard" />
       <img id="backCard" class="topCard" src="/cards/back.png">
       <div id="colorPicker" class="hide">
@@ -53,7 +55,8 @@
           number = num;
       });
       socket.on('cardList', function(players){
-        loadCards(players[number]);     
+        loadCards(players[number]); 
+        loadOtherPlayers(players);    
       });
       socket.on('currentCard', function(cid){
         showCurrentCard(cid);    
@@ -61,6 +64,23 @@
       socket.on('reset', function(){
         reset();
       });
+      function loadOtherPlayers(players){
+        document.getElementById('otherPlayers').innerHTML = ' ';
+        for(var i = 0; i < players.length; i ++){
+          if(i != number){
+            var d = document.createElement('div');
+            var p = document.createElement('h1');
+            p.innerHTML = i + ' <br><br> ' + players[i].length;
+            var img = document.createElement('img');
+            img.src = '/cards/altback.png';
+            d.appendChild(p);
+            d.appendChild(img);
+            d.classList.add('stack');
+            document.getElementById('otherPlayers').appendChild(d);
+
+          }
+        }
+      }
       function showCurrentColor(c){
         document.getElementById('topSection').classList.remove('red', 'green', 'blue', 'yellow');
         document.getElementById('topSection').classList.add(c);
@@ -77,7 +97,6 @@
           cid = c.color + c.type;
         topCard.src = '/cards/' + cid + '.png';
         topCard.id = cid;
-        console.log(c.color);
         showCurrentColor(c.color);
       }
       function loadCards(cards){

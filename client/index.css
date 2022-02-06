@@ -11,6 +11,9 @@
 
 #topSection{
   text-align: center;
+  margin: 7%;
+  border: lightslategray 20px solid;
+  border-radius: 20px;
 }
 .topCard{
   width: 20%;
@@ -37,4 +40,41 @@
 }
 .yellow{
   background-color: #F3ECC9;
+}
+
+body {
+  background-color: lightblue;
+}
+
+#otherPlayers{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+div.stack{
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.stack *{
+  grid-row-start: 1;
+  grid-column-start: 1;
+}
+.stack{
+  margin: 1%;
+}
+.stack img{
+  z-index: 0;
+  width: 100px;
+}
+.stack h1{
+  z-index: 1;
+  margin: auto;
+  color: lightgray;
+} 
+
+#title{
+  text-align: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 100px;
 }
