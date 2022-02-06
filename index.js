@@ -39,10 +39,10 @@ io.on('connection', socket => {
     game.stopWaiting();
     game.setColor(color);
     if(game.number == -4){
-      sendCards({type: '+4'});
+      sendCards({type: '+4', color: color});
     }
     else if(game.number == -5){
-      sendCards({type: 'color'});
+      sendCards({type: 'color', color: color});
     }
   });
 });
@@ -134,15 +134,14 @@ class Game{
       }
       else if(cid.includes('+4')){
         this.waiting = true;
-        getColor(this.turn);
         addFour(this);
       }
       else if(cid.includes('color')){
         this.waiting = true;
-        getColor(this.turn);
         c.type = 'color';
         success = true;
-        this.number == -5;
+        this.number = -5;
+        getColor(this.turn);
       }
       var skipExtra = false;
       function addTwo(g){
@@ -159,7 +158,8 @@ class Game{
         c.type = '+4';
         skipExtra = true;
         success = true;
-        this.number == -4;
+        g.number = -4;
+        getColor(this.turn);
       }
       function reverseOrder(g){
         g.number = -2;
