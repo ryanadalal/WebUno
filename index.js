@@ -38,6 +38,12 @@ io.on('connection', socket => {
     //implement code for when a card is clicked
     game.stopWaiting();
     game.setColor(color);
+    if(game.number == -4){
+      sendCards({type: '+4'});
+    }
+    else if(game.number == -5){
+      sendCards({type: 'color'});
+    }
   });
 });
 function sendCards(cid){
@@ -136,6 +142,7 @@ class Game{
         getColor(this.turn);
         c.type = 'color';
         success = true;
+        this.number == -5;
       }
       var skipExtra = false;
       function addTwo(g){
@@ -152,6 +159,7 @@ class Game{
         c.type = '+4';
         skipExtra = true;
         success = true;
+        this.number == -4;
       }
       function reverseOrder(g){
         g.number = -2;

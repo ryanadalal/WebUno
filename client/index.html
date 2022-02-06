@@ -18,11 +18,11 @@
         <button id="chooseBlue" class="blue">blue</button>
         <button id="chooseGreen" class="green">green</button>
         <button id="chooseYellow" class="yellow">yellow</button>
-      </ul>
+      </div>
     </div>
-    <ul id="cardList">
+    <div id="cardList">
 
-    </ul>
+    </div>
 
     <script src="../socket.io/socket.io.js"></script>
     <script>
@@ -33,6 +33,7 @@
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
+
       var colorPicker = document.getElementById('colorPicker');
       for(var i = 0; i < colorPicker.childNodes.length; i ++){
         colorPicker.childNodes[i].addEventListener('click', function(){
@@ -60,6 +61,10 @@
       socket.on('reset', function(){
         reset();
       });
+      function showCurrentColor(c){
+        document.getElementById('topSection').classList.remove('red', 'green', 'blue', 'yellow');
+        document.getElementById('topSection').classList.add(c);
+      }
       function reset(){
         document.getElementById('cardList').innerHTML = ' ';
       }
@@ -72,6 +77,7 @@
           cid = c.color + c.type;
         topCard.src = '/cards/' + cid + '.png';
         topCard.id = cid;
+        showCurrentColor(c.color);
       }
       function loadCards(cards){
         reset();
