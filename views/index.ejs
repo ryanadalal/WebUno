@@ -25,9 +25,9 @@
     <div id="cardList">
 
     </div>
-
-    <script src="../socket.io/socket.io.js"></script>
+    <script src="http://192.168.1.14:3000/socket.io/socket.io.js"></script>
     <script>
+      console.log(window.location.pathname);
       var socket = io();
       var cid;
       var number = -1;

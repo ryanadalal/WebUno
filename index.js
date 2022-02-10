@@ -1,16 +1,81 @@
-const express = require("express");
-const app = express();
-
-const http = require("http");
-const { send } = require("process");
-const server = http.createServer(app);
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+const session = require('express-session');
 
 const { Server } = require("socket.io");
 const io = new Server(server);
+app.set('view engine', 'ejs');
 
-app.use(express.static(__dirname + '/client'));
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/client/index.html');
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'SECRET' 
+}));
+
+app.use(express.static(__dirname + '/views'));
+
+
+//const sharedsession = require("express-socket.io-session");
+
+const passport = require('passport');
+const { send } = require("process");
+
+var userProfile;
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+const port = process.env.PORT;
+server.listen(port, () => {
+  console.log('listening on *:3000');
+});
+
+app.get('/', function(req, res) {
+  res.render('auth');
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.set('view engine', 'ejs');
+
+app.get('/success', (req, res) => {
+  res.render('index', {user: userProfile});
+});
+app.get('/error', (req, res) => res.send("error logging in"));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:" + port + "/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+      userProfile=profile;
+      return done(null, userProfile);
+  }
+));
+
+app.get('/auth/google', 
+  passport.authenticate('google', { scope : ['profile', 'email'] }));
+ 
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function(req, res) {
+    console.log("working");
+    // Successful authentication, redirect success.
+    res.redirect('/success');
 });
 
 var pNum = 0;
@@ -189,8 +254,9 @@ class Game{
 }
 
 class Player{
-  constructor(){
+  constructor(name){
     this.cards = [];
+    this.name = name;
     for(var i = 0; i < 7; i ++){
       this.getNewCard();
     }
@@ -272,6 +338,3 @@ class Player{
   }
 }
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
-});
