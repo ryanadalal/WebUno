@@ -54,9 +54,9 @@
         if(number == -1)
           number = num;
       });
-      socket.on('cardList', function(players){
+      socket.on('cardList', function(players, names){
         loadCards(players[number]); 
-        loadOtherPlayers(players);    
+        loadOtherPlayers(players, names);    
       });
       socket.on('currentCard', function(cid){
         showCurrentCard(cid);    
@@ -64,13 +64,13 @@
       socket.on('reset', function(){
         reset();
       });
-      function loadOtherPlayers(players){
+      function loadOtherPlayers(players, names){
         document.getElementById('otherPlayers').innerHTML = ' ';
         for(var i = 0; i < players.length; i ++){
           if(i != number){
             var d = document.createElement('div');
             var p = document.createElement('h1');
-            p.innerHTML = i + ' <br><br> ' + players[i].length;
+            p.innerHTML = names[i] + ' <br><br> ' + players[i].length;
             var img = document.createElement('img');
             img.src = '/cards/altback.png';
             d.appendChild(p);

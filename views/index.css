@@ -71,6 +71,8 @@ div.stack{
   z-index: 1;
   margin: auto;
   color: lightgray;
+  font-size: 100%;
+  line-height: 200%;
 } 
 
 #title{

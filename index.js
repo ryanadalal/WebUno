@@ -85,7 +85,7 @@ io.on('connection', socket => {
   io.emit('reset');
   io.emit('number', pNum);
   pNum ++;
-  players.push(new Player());
+  players.push(new Player(userProfile.displayName));
   game = new Game(players);
   sendCards({type: 'normal', color: game.color, number: game.number});
   socket.on('disconnect', () => {
@@ -113,10 +113,13 @@ io.on('connection', socket => {
 });
 function sendCards(cid){
   var cardList = [];
-  for(var i = 0; i < game.players.length; i ++)
+  var names = [];
+  for(var i = 0; i < game.players.length; i ++){
     cardList.push(game.players[i].outputCards());
+    names.push(game.players[i].name);
+  }
   io.emit('currentCard', cid);
-  io.emit('cardList', cardList);
+  io.emit('cardList', cardList, names);
 }
 function getColor(num){
   io.emit('pickColor', num);
