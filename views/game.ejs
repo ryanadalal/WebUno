@@ -4,27 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/index.css">
+    <link rel="stylesheet" href="/styles/game.css">
     <link rel="icon" type="image/x-icon" href="/images/cards/logo.png">
     <title>Uno</title>
   </head>
   <body>
     <!--Use a flex box for the entire game push cards and decks to left and other players to right-->
-    <div id="topSection">
-      <div id="otherPlayers"></div>
-      <div id="decks">
-        <img id="currentCard" src="" class="topCard" />
-        <img id="backCard" class="topCard" src="/images/cards/back.png">
-        <div id="colorPicker" class="hide">
-          <button id="chooseRed" class="red">red</button>
-          <button id="chooseBlue" class="blue">blue</button>
-          <button id="chooseGreen" class="green">green</button>
-          <button id="chooseYellow" class="yellow">yellow</button>
+    <div id="board" class="lightblue">
+      <div id="topSection">
+        <div id="otherPlayers"></div>
+        <div id="decks">
+          <img id="currentCard" src="" class="topCard" />
+          <img id="backCard" class="topCard" src="/images/cards/back.png">
+          <div id="colorPicker" class="hide">
+            <button id="chooseRed" class="red">red</button>
+            <button id="chooseBlue" class="blue">blue</button>
+            <button id="chooseGreen" class="green">green</button>
+            <button id="chooseYellow" class="yellow">yellow</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div id="cardList">
+      <div id="cardList">
 
+      </div>
     </div>
     <script src="../socket.io/socket.io.js"></script>
     <script>
@@ -57,8 +59,15 @@
         loadCards(players[number]); 
         loadOtherPlayers(players, names);    
       });
-      socket.on('currentCard', function(cid){
+      socket.on('currentCard', function(cid, turn){
         showCurrentCard(cid);    
+        document.getElementById('board').classList.remove('lightgreen', 'lightblue');
+        if(turn == number){
+          document.getElementById("board").classList.add('lightgreen');
+        }
+        else{
+          document.getElementById("board").classList.add('lightblue');
+        }
       });
       socket.on('reset', function(){
         reset();

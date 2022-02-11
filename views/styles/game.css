@@ -47,8 +47,11 @@
   background-color: #F3ECC9;
 }
 
-body {
+.lightblue{
   background-color: lightblue;
+}
+.lightgreen{
+  background-color: rgb(148, 228, 148);
 }
 
 #otherPlayers{

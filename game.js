@@ -121,12 +121,13 @@ class Game{
         success = true;
       }
       if(success){
+        var t = this.turn;
         if(skipExtra)
           this.turn = this.nextPlayer();
         this.players[this.turn].removeCard(c);
         this.turn = this.nextPlayer();
         if(gc)
-          return "getColor";
+          return "getColor" + t;
         return c;
       }
     }

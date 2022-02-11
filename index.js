@@ -27,11 +27,12 @@ const { send } = require("process");
 var userProfile;
 
 const dotenv = require('dotenv');
+const { type } = require('express/lib/response');
 dotenv.config();
 
 const port = process.env.PORT;
 server.listen(port, () => {
-  console.log('listening on *:3000');
+  console.log('Game server running: ');
 });
 
 app.get('/', function(req, res) {
@@ -44,7 +45,7 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.get('/success', (req, res) => {
-  res.render('index', {user: userProfile});
+  res.render('game', {user: userProfile});
 });
 app.get('/error', (req, res) => res.send("error logging in"));
 
@@ -76,7 +77,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/error' }),
   function(req, res) {
-    console.log("working");
+    console.log("new player connected");
     // Successful authentication, redirect success.
     res.redirect('/success');
 });
@@ -98,8 +99,8 @@ io.on('connection', socket => {
     //implement code for when a card is clicked
     var checkedMove = game.checkMove(cid, user);
     if (checkedMove){
-      if(checkedMove == "getColor")
-        getColor(game.turn);
+      if(typeof(checkedMove) == "string" && checkedMove.includes("getColor"))
+        getColor(parseInt(checkedMove[checkedMove.length - 1]));
       else
         sendCards(checkedMove);
     }
@@ -130,7 +131,7 @@ function sendCards(cid){
     cardList.push(game.players[i].outputCards());
     names.push(game.players[i].name);
   }
-  io.emit('currentCard', cid);
+  io.emit('currentCard', cid, game.turn);
   io.emit('cardList', cardList, names);
 }
 function getColor(num){
