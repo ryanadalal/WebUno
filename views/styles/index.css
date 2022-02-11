@@ -6,14 +6,19 @@
 .card{
   width: 15%; 
   height: auto;
-  margin: -2% -1%;
+  margin: -3% -1%;
 }
-
-#topSection{
+#decks{
   text-align: center;
-  margin: 7%;
   border: lightslategray 20px solid;
   border-radius: 20px;
+  width: 60%
+}
+#topSection{
+  display: flex;
+  display: wrap;
+  justify-content: center;
+  align-items: center;
 }
 .topCard{
   width: 20%;
@@ -51,6 +56,8 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  width: 30%;
 }
 div.stack{
   display: grid;
