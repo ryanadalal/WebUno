@@ -9,6 +9,7 @@
   <body>
     <div id="lobbySection">
       <h1>Waiting Lobby</h1>
+      <h4 id="numReady"></h4>
       <p id="readyButton">Ready Up</p>
     </div>
     <script src="../socket.io/socket.io.js"></script>
@@ -17,6 +18,7 @@
       var socket = io();
       var number = -1;
       var readyButton = document.getElementById("readyButton");
+      var numReady = document.getElementById('numReady');
       readyButton.addEventListener('click', function(e){
         socket.emit('readied', number);
       });
@@ -30,6 +32,9 @@
       socket.on('redirect', function(destination){
         location.href = destination;
       });
+      socket.on('playerreadied', function(allready){
+        numReady.innerHTML = '' + allready[0] + ' / ' + allready[1];
+      })
     </script>
   </body>
 </html> 

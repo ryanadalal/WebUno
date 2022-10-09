@@ -15,13 +15,19 @@ class Game{
   }
   setReady(user){
     this.players[user].setReady();
+    var count = 0
     for (var p of this.players){
-      if (p.isReady() == false){
-        return false;
+      if (p.isReady()){
+        count += 1;
       }
     }
-    this.playing = true;
-    return true;
+    if (count == this.players.length){
+      this.playing = true;
+      return -1;
+    }
+    else{
+      return [count, this.players.length];
+    }
   }
   reverse(){
     this.dir *= -1;

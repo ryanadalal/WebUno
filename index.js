@@ -101,8 +101,12 @@ io.on('connection', socket => {
     io.emit('reset');
   });
   socket.on('readied', (user) => {
-    if (game.setReady(user)){
+    allready = game.setReady(user);
+    if (allready == -1){
       io.emit('redirect', '/play');
+    }
+    else{
+      io.emit('playerreadied', allready);
     }
   });
   socket.on('cardClicked', (cid, user) => {
