@@ -1,0 +1,28 @@
+body {
+  background-color: lightblue;
+}
+
+#lobbySection{
+  text-align: center;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 5%;
+  border: lightslategray 20px solid;
+  border-radius: 20px;
+  font-size: xx-large;
+}
+
+#lobbySection p{
+  text-decoration: none;
+  color: black;
+  border: black solid 3px;
+  background-color: lightgray;
+  padding: 2%;
+  width: 50%;
+  margin: auto;
+}
+#lobbySection p:hover{
+  background-color: darkgray;
+}

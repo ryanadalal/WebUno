@@ -1,0 +1,32 @@
+
+<!doctype html>
+<html>
+  <head>
+    <title>Waiting Lobby</title>
+    <link rel="stylesheet" href="/styles/lobby.css">
+    <link rel="icon" type="image/x-icon" href="/images/cards/logo.png">
+  </head>
+  <body>
+    <div id="lobbySection">
+      <h1>Waiting Lobby</h1>
+      <p id="readyButton">Ready Up</p>
+    </div>
+    <script src="../socket.io/socket.io.js"></script>
+    <script>
+      console.log(window.location.pathname);
+      var socket = io();
+      var number = -1;
+      var readyButton = document.getElementById("readyButton");
+      readyButton.addEventListener('click', function(e){
+        socket.emit('readied', number);
+      });
+      socket.on('number', function(num){
+        if(number == -1)
+          number = num;
+      });
+      socket.on('reset', function(){
+        reset();
+      });
+    </script>
+  </body>
+</html> 

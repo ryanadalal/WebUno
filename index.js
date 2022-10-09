@@ -45,8 +45,13 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.get('/success', (req, res) => {
+  res.render('lobby', {user: userProfile});
+});
+
+app.get('/play', (req, res) => {
   res.render('game', {user: userProfile});
 });
+
 app.get('/error', (req, res) => res.send("error logging in"));
 
 passport.serializeUser(function(user, cb) {
