@@ -95,9 +95,9 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     io.emit('reset');
   });
-  socket.on('readied', (cid, user) => {
+  socket.on('readied', (user) => {
     game.setReady(user);
-  })
+  });
   socket.on('cardClicked', (cid, user) => {
     //implement code for when a card is clicked
     var checkedMove = game.checkMove(cid, user);

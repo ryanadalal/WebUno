@@ -5,10 +5,23 @@ class Game{
     this.dir = 1;
     this.color = 'red';
     this.number = 0;
-    this.waiting = false;
+    this.waiting = true;
+  }
+  isPlaying(){
+    return !this.waiting;
   }
   setColor(color){
     this.color = color;
+  }
+  setReady(user){
+    this.players[user].setReady();
+    for (p of this.players){
+      if (p.isReady() == false){
+        return
+      }
+    }
+    this.waiting = true;
+    beginGame();
   }
   reverse(){
     this.dir *= -1;
