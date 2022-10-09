@@ -63,7 +63,7 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:" + port + "/auth/google/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/google/callback"//"http://c97e-100-2-35-76.ngrok.io/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
       userProfile=profile;
@@ -95,6 +95,9 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     io.emit('reset');
   });
+  socket.on('readied', (cid, user) => {
+    game.setReady(user);
+  })
   socket.on('cardClicked', (cid, user) => {
     //implement code for when a card is clicked
     var checkedMove = game.checkMove(cid, user);
