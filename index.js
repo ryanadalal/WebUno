@@ -49,6 +49,7 @@ app.get('/success', (req, res) => {
 });
 
 app.get('/play', (req, res) => {
+  //every time this is run a new client is counted as being connected.
   res.render('game', {user: userProfile});
 });
 

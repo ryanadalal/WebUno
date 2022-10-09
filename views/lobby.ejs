@@ -30,6 +30,9 @@
         //put resets here if needed
       });
       socket.on('redirect', function(destination){
+        //THIS IS CAUSING DUPLICATE PLAYERS
+        //FIX THIS NEXT
+        //send this current socket to the game page so they use one socket without creating new one
         location.href = destination;
       });
       socket.on('playerreadied', function(allready){
