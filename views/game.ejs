@@ -10,6 +10,11 @@
   </head>
   <body>
     <!--Use a flex box for the entire game push cards and decks to left and other players to right-->
+    <div id="lobbySection">
+      <h1>Waiting Lobby</h1>
+      <h4 id="numReady"></h4>
+      <p id="readyButton">Ready Up</p>
+    </div>
     <div id="board" class="lightblue">
       <div id="topSection">
         <div id="otherPlayers"></div>
@@ -24,28 +29,32 @@
           </div>
         </div>
       </div>
-      <div id="cardList">
-
-      </div>
+      <div id="cardList"></div>
     </div>
     <script src="../socket.io/socket.io.js"></script>
     <script>
       console.log(window.location.pathname);
       var socket = io();
-      var cid;
       var number = -1;
+    </script>
+    <script>
+      var cid;
       var backCard = document.getElementById("backCard");
+      var colorPicker = document.getElementById('colorPicker');
+      var topCard = document.getElementById("currentCard");
+      var readyButton = document.getElementById("readyButton");
+      var numReady = document.getElementById('numReady');
+    </script>
+    <script>
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
-      var colorPicker = document.getElementById('colorPicker');
       for(var i = 0; i < colorPicker.childNodes.length; i ++){
         colorPicker.childNodes[i].addEventListener('click', function(){
           socket.emit('selectedColor', this.id.slice(6).toLowerCase());
           colorPicker.classList.add('hide');
         });
       }
-      var topCard = document.getElementById("currentCard");
       socket.on('pickColor', function(num){
         if(number == num){
           document.getElementById('colorPicker').classList.remove('hide');
@@ -126,6 +135,27 @@
           });
         }
       }
+    </script>
+    <script>
+      readyButton.addEventListener('click', function(e){
+        socket.emit('readied', number);
+      });
+      socket.on('number', function(num){
+        if(number == -1)
+          number = num;
+      });
+      socket.on('reset', function(){
+        //put resets here if needed
+      });
+      socket.on('begingame', function(destination){
+        //THIS IS CAUSING DUPLICATE PLAYERS
+        //FIX THIS NEXT
+        //send this current socket to the game page so they use one socket without creating new one
+        beginGame();
+      });
+      socket.on('playerreadied', function(allready){
+        numReady.innerHTML = '' + allready[0] + ' / ' + allready[1];
+      })
     </script>
   </body>
 </html>
