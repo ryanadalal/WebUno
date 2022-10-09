@@ -5,7 +5,7 @@ class Game{
     this.dir = 1;
     this.color = 'red';
     this.number = 0;
-    this.waiting = true;
+    this.playing = false;
   }
   isPlaying(){
     return !this.waiting;
@@ -15,13 +15,13 @@ class Game{
   }
   setReady(user){
     this.players[user].setReady();
-    for (p of this.players){
+    for (var p of this.players){
       if (p.isReady() == false){
-        return
+        return false;
       }
     }
-    this.waiting = true;
-    beginGame();
+    this.playing = true;
+    return true;
   }
   reverse(){
     this.dir *= -1;

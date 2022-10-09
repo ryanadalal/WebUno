@@ -101,7 +101,9 @@ io.on('connection', socket => {
     io.emit('reset');
   });
   socket.on('readied', (user) => {
-    game.setReady(user);
+    if (game.setReady(user)){
+      io.emit('redirect', '/play');
+    }
   });
   socket.on('cardClicked', (cid, user) => {
     //implement code for when a card is clicked

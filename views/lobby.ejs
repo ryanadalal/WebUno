@@ -25,7 +25,10 @@
           number = num;
       });
       socket.on('reset', function(){
-        reset();
+        //put resets here if needed
+      });
+      socket.on('redirect', function(destination){
+        location.href = destination;
       });
     </script>
   </body>
