@@ -14,7 +14,9 @@ class Game{
     this.color = color;
   }
   setReady(user){
-    this.players[user].setReady();
+    if (user != -1){
+      this.players[user].setReady();
+    }
     var count = 0
     for (var p of this.players){
       if (p.isReady()){

@@ -86,13 +86,14 @@ app.get('/auth/google/callback',
 var pNum = 0;
 var game = new Game();
 io.on('connection', socket => {
+  socket.on('disconnect', () => {
+    io.emit('reset');
+  });
   io.emit('reset');
   io.emit('number', pNum);
   pNum ++;
   game.addPlayer(new Player(userProfile.displayName));
-  socket.on('disconnect', () => {
-    io.emit('reset');
-  });
+  io.emit('playerreadied', game.setReady(-1));
   socket.on('readied', (user) => {
     allready = game.setReady(user);
     if (allready == -1){
