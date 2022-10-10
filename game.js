@@ -1,8 +1,8 @@
 class Game{
   constructor(MINPLAYERS){
     this.MINIMUM_PLAYERS = MINPLAYERS;
-
     this.players = [];
+    this.disconnected_players = [];
     this.turn = 0;
     this.dir = 1;
     this.color = 'red';
@@ -53,15 +53,29 @@ class Game{
     return true;
   }
   nextPlayer(){
-    if (this.dir == -1 && this.turn == 0){
-      return this.players.length - 1;
+    function determineNext(g){
+      if (g.dir == -1 && g.turn == 0){
+        return g.players.length - 1;
+      }
+      else if(g.dir == 1 && g.turn == g.players.length - 1){
+        return 0;
+      }
+      else{
+        return g.turn + g.dir;
+      }
     }
-    else if(this.dir == 1 && this.turn == this.players.length - 1){
-      return 0;
+    var next = determineNext(this);
+    while (this.isDisconnected(next) != -1){
+      next = determineNext(this);
     }
-    else{
-      return this.turn + this.dir;
+    return next;
+  }
+  isDisconnected(p){
+    var p_indexes = [];
+    for (player of this.disconnected_players){
+      p_indexes.push(this.players.indexOf(player));
     }
+    return p_indexes.indexOf(p);
   }
   drawCard(n){
     if(n == this.turn && !this.waiting){

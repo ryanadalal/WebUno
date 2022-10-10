@@ -96,6 +96,7 @@ var game = new Game(1);
 io.on('connection', socket => {
   socket.on('disconnect', () => {
     io.emit('reset');
+    console.log(userProfile);
   });
   io.emit('reset');
   if (!game.addPlayer(new Player(userProfile.displayName, userProfile.id))){
