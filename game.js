@@ -1,6 +1,6 @@
 class Game{
-  constructor(){
-    this.MINIMUM_PLAYERS = 1;
+  constructor(MINPLAYERS){
+    this.MINIMUM_PLAYERS = MINPLAYERS;
 
     this.players = [];
     this.turn = 0;

@@ -92,7 +92,7 @@ app.get('/auth/google/callback',
 });
 
 var pNum = 0;
-var game = new Game();
+var game = new Game(1);
 io.on('connection', socket => {
   socket.on('disconnect', () => {
     io.emit('reset');
