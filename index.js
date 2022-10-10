@@ -110,6 +110,9 @@ io.on('connection', socket => {
       sendCards({type: 'normal', color: game.color, number: game.number});
       io.emit('begingame');
     }
+    else if(allready[0] == false){
+      io.emit('minimumplayers', allready);
+    }
     else{
       io.emit('playerreadied', allready);
     }
