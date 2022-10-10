@@ -157,6 +157,12 @@
         if(number == -1)
           number = num;
       });
+      socket.on('logInFailiure', function(){
+        if (number == -1){
+          socket.disconnect();
+          window.location.href = '/authFail';
+        }
+      })
       socket.on('begingame', function(){
         beginGame();
       });

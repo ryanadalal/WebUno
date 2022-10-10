@@ -36,7 +36,15 @@ server.listen(port, () => {
 });
 
 app.get('/', function(req, res) {
-  res.render('auth');
+  res.render('auth', {
+    situation: 'normal'
+  });
+});
+
+app.get('/authFail', function(req, res) {
+  res.render('auth', {
+    situation: 'alreadyLoggedIn'
+  });
 });
 
 app.use(passport.initialize());
@@ -90,9 +98,11 @@ io.on('connection', socket => {
     io.emit('reset');
   });
   io.emit('reset');
+  if (!game.addPlayer(new Player(userProfile.displayName, userProfile.id))){
+    io.emit('logInFailiure');
+  }
   io.emit('number', pNum);
   pNum ++;
-  game.addPlayer(new Player(userProfile.displayName));
   io.emit('playerreadied', game.setReady(-1));
   socket.on('readied', (user) => {
     allready = game.setReady(user);

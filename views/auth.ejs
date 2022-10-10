@@ -9,7 +9,22 @@
   <body>
     <div id="logInSection">
       <h1>Social Authentication</h1>
+      <h3 id="failedLog"></h3>
       <a href="/auth/google"><img src="/images/loginbutton.png"></a>
     </div>
+    <script>
+      var situation = '<%= situation %>';
+      checkFail();
+      function checkFail(){
+        console.log(situation);
+        var failedLog = document.getElementById('failedLog');
+        if (situation == 'normal'){
+
+        }
+        else if(situation == 'alreadyLoggedIn'){
+          failedLog.innerHTML = 'Account Already In Use';
+        }
+      }
+    </script>
   </body>
 </html> 

@@ -38,7 +38,12 @@ class Game{
     this.waiting = false;
   }
   addPlayer(p){
+    for(var p2 of this.players){
+      if (p.getID() == p2.getID())
+        return false
+    }
     this.players.push(p);
+    return true;
   }
   nextPlayer(){
     if (this.dir == -1 && this.turn == 0){

@@ -22,3 +22,7 @@ body {
 #logInSection a img{
   width: 300px;
 }
+
+#failedLog{
+  color: red;
+}
