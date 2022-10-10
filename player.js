@@ -3,9 +3,16 @@ class Player{
   constructor(name){
     this.cards = [];
     this.name = name;
+    this.ready = false;
     for(var i = 0; i < 7; i ++){
       this.getNewCard();
     }
+  }
+  setReady(){
+    this.ready = true;
+  }
+  isReady(){
+    return this.ready;
   }
   outputCards(){
     return this.cards;

@@ -47,6 +47,7 @@ app.set('view engine', 'ejs');
 app.get('/success', (req, res) => {
   res.render('game', {user: userProfile});
 });
+
 app.get('/error', (req, res) => res.send("error logging in"));
 
 passport.serializeUser(function(user, cb) {
@@ -63,7 +64,7 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:" + port + "/auth/google/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/google/callback"//"http://c97e-100-2-35-76.ngrok.io/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
       userProfile=profile;
@@ -83,17 +84,24 @@ app.get('/auth/google/callback',
 });
 
 var pNum = 0;
-var game;
-var players = [];
+var game = new Game();
 io.on('connection', socket => {
   io.emit('reset');
   io.emit('number', pNum);
   pNum ++;
-  players.push(new Player(userProfile.displayName));
-  game = new Game(players);
-  sendCards({type: 'normal', color: game.color, number: game.number});
+  game.addPlayer(new Player(userProfile.displayName));
   socket.on('disconnect', () => {
     io.emit('reset');
+  });
+  socket.on('readied', (user) => {
+    allready = game.setReady(user);
+    if (allready == -1){
+      sendCards({type: 'normal', color: game.color, number: game.number});
+      io.emit('begingame');
+    }
+    else{
+      io.emit('playerreadied', allready);
+    }
   });
   socket.on('cardClicked', (cid, user) => {
     //implement code for when a card is clicked

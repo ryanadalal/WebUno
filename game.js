@@ -1,20 +1,42 @@
 class Game{
-  constructor(players){
-    this.players = players;
+  constructor(){
+    this.players = [];
     this.turn = 0;
     this.dir = 1;
     this.color = 'red';
     this.number = 0;
-    this.waiting = false;
+    this.playing = false;
+  }
+  isPlaying(){
+    return !this.waiting;
   }
   setColor(color){
     this.color = color;
+  }
+  setReady(user){
+    this.players[user].setReady();
+    var count = 0
+    for (var p of this.players){
+      if (p.isReady()){
+        count += 1;
+      }
+    }
+    if (count == this.players.length){
+      this.playing = true;
+      return -1;
+    }
+    else{
+      return [count, this.players.length];
+    }
   }
   reverse(){
     this.dir *= -1;
   }
   stopWaiting(){
     this.waiting = false;
+  }
+  addPlayer(p){
+    this.players.push(p);
   }
   nextPlayer(){
     if (this.dir == -1 && this.turn == 0){

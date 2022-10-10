@@ -10,7 +10,15 @@
   </head>
   <body>
     <!--Use a flex box for the entire game push cards and decks to left and other players to right-->
-    <div id="board" class="lightblue">
+    <!--
+    -->
+    <div id="lobbySection" class="">
+      <h1>Waiting Lobby</h1>
+      <h4 id="numReady"></h4>
+      <p id="readyButton">Ready Up</p>
+    </div>
+
+    <div id="board" class="lightblue, hide">
       <div id="topSection">
         <div id="otherPlayers"></div>
         <div id="decks">
@@ -24,31 +32,42 @@
           </div>
         </div>
       </div>
-      <div id="cardList">
-
-      </div>
+      <div id="cardList"></div>
     </div>
     <script src="../socket.io/socket.io.js"></script>
     <script>
       console.log(window.location.pathname);
       var socket = io();
-      var cid;
       var number = -1;
+    </script>
+    <script>
+      var cid;
+      var lobbySection = document.getElementById("lobbySection");
+      var board = document.getElementById("board");
       var backCard = document.getElementById("backCard");
+      var colorPicker = document.getElementById('colorPicker');
+      var topCard = document.getElementById("currentCard");
+      var readyButton = document.getElementById("readyButton");
+      var numReady = document.getElementById('numReady');
+      var colorPicker = document.getElementById('colorPicker');
+      var otherPlayers = document.getElementById('otherPlayers');
+      var decks = document.getElementById('decks');
+      var cardList = document.getElementById('cardList');
+    </script>
+    <script>
       backCard.addEventListener('click', function(e){
         socket.emit('takeCard', number);
       });
-      var colorPicker = document.getElementById('colorPicker');
       for(var i = 0; i < colorPicker.childNodes.length; i ++){
         colorPicker.childNodes[i].addEventListener('click', function(){
           socket.emit('selectedColor', this.id.slice(6).toLowerCase());
           colorPicker.classList.add('hide');
         });
       }
-      var topCard = document.getElementById("currentCard");
       socket.on('pickColor', function(num){
         if(number == num){
-          document.getElementById('colorPicker').classList.remove('hide');
+          colorPicker.classList.remove('hide');
+          //document.getElementById('colorPicker').classList.remove('hide');
         }
       });
       socket.on('number', function(num){
@@ -61,19 +80,22 @@
       });
       socket.on('currentCard', function(cid, turn){
         showCurrentCard(cid);    
-        document.getElementById('board').classList.remove('lightgreen', 'lightblue');
+        //document.getElementById('board').classList.remove('lightgreen', 'lightblue');
+        board.classList.remove('lightgreen', 'lightblue');
         if(turn == number){
-          document.getElementById("board").classList.add('lightgreen');
+          //document.getElementById("board").classList.add('lightgreen');
+          board.classList.add('lightgreen');
         }
         else{
-          document.getElementById("board").classList.add('lightblue');
+          //document.getElementById("board").classList.add('lightblue');
+          board.classList.add('lightblue');
         }
       });
       socket.on('reset', function(){
-        reset();
+        //may need resets later
       });
       function loadOtherPlayers(players, names){
-        document.getElementById('otherPlayers').innerHTML = ' ';
+        otherPlayers.innerHTML = ' ';
         for(var i = 0; i < players.length; i ++){
           if(i != number){
             var d = document.createElement('div');
@@ -84,16 +106,16 @@
             d.appendChild(p);
             d.appendChild(img);
             d.classList.add('stack');
-            document.getElementById('otherPlayers').appendChild(d);
+            otherPlayers.appendChild(d);
           }
         }
       }
       function showCurrentColor(c){
-        document.getElementById('decks').classList.remove('red', 'green', 'blue', 'yellow');
-        document.getElementById('decks').classList.add(c);
+        decks.classList.remove('red', 'green', 'blue', 'yellow');
+        decks.classList.add(c);
       }
       function reset(){
-        document.getElementById('cardList').innerHTML = ' ';
+        cardList.innerHTML = ' ';
       }
       function showCurrentCard(c){
         if(c.type == 'normal')
@@ -120,11 +142,30 @@
           card.src = '/images/cards/' + cid + '.png';
           card.id = cid;
           card.classList.add('card');
-          document.getElementById('cardList').appendChild(card);
+          cardList.appendChild(card);
           card.addEventListener('click', function(e){
             socket.emit('cardClicked', this.id, number);
           });
         }
+      }
+    </script>
+    <script>
+      readyButton.addEventListener('click', function(e){
+        socket.emit('readied', number);
+      });
+      socket.on('number', function(num){
+        if(number == -1)
+          number = num;
+      });
+      socket.on('begingame', function(){
+        beginGame();
+      });
+      socket.on('playerreadied', function(allready){
+        numReady.innerHTML = '' + allready[0] + ' / ' + allready[1];
+      })
+      function beginGame(){
+        lobbySection.classList.add('hide');
+        board.classList.remove('hide');
       }
     </script>
   </body>
