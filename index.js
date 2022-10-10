@@ -109,6 +109,7 @@ io.on('connection', socket => {
   io.emit('playerreadied', game.setReady(-1));
   socket.on('rollpresent', (user) => {
     game.markPresent(user);
+    console.log(game.getDisconnected(), game.turn);
   })
   socket.on('readied', (user) => {
     allready = game.setReady(user);

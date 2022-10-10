@@ -1,3 +1,5 @@
+const { contentDisposition } = require("express/lib/utils");
+
 class Game{
   constructor(MINPLAYERS){
     this.MINIMUM_PLAYERS = MINPLAYERS;
@@ -13,7 +15,11 @@ class Game{
     this.disconnected_players = this.players;
   }
   markPresent(n){
-    this.players.splice(n, 1);
+    this.disconnected_players.splice(n, 1);
+    console.log('dissconnected', this.disconnected_players);
+  }
+  getDisconnected(){
+    return this.disconnected_players;
   }
   isPlaying(){
     return !this.waiting;
@@ -71,6 +77,10 @@ class Game{
       }
     }
     var next = determineNext(this);
+    console.log(next);
+    console.log(this.players);
+    //PLAYER IDS ARE ALL THE SAME??????
+    //sdifjdlkfjslkdf
     while (this.isDisconnected(next) != -1){
       next = determineNext(this);
     }
@@ -81,6 +91,7 @@ class Game{
     for (var player of this.disconnected_players){
       p_indexes.push(this.players.indexOf(player));
     }
+    //console.log(p_indexes);
     return p_indexes.indexOf(p);
   }
   drawCard(n){
@@ -95,6 +106,7 @@ class Game{
     var c = {};
     var gc = false;
     if(user == this.turn && !this.waiting){
+      console.log('it is this turn')
       var success = false;
       if(cid.includes(this.color)){
         c.color = this.color;
@@ -182,12 +194,14 @@ class Game{
           this.turn = this.nextPlayer();
         this.players[this.turn].removeCard(c);
         this.turn = this.nextPlayer();
+        console.log(this.turn);
         if(gc)
           return "getColor" + t;
         return c;
       }
     }
-    return false;
+    else
+      return false;
   }
 }
 
