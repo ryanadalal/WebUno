@@ -92,6 +92,7 @@ class Player{
       c.type = 'color';
     }
     this.cards.push(c);
+    return c;
   }
 }
 

@@ -58,7 +58,15 @@ class Game{
   }
   drawCard(n){
     if(n == this.turn && !this.waiting){
-      this.players[n].getNewCard();
+      var new_c = this.players[n].getNewCard();
+      var new_cid;
+      if(new_c.type == 'normal')
+            new_cid = new_c.color + new_c.number;
+          else if(new_c.type == '+4' || new_c.type == 'color')
+            new_cid = new_c.type;
+          else
+            new_cid = new_c.color + new_c.type;
+      this.checkMove(new_cid, n);
       this.turn = this.nextPlayer();
       return true;
     }
