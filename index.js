@@ -45,11 +45,6 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.get('/success', (req, res) => {
-  res.render('lobby', {user: userProfile});
-});
-
-app.get('/play', (req, res) => {
-  //every time this is run a new client is counted as being connected.
   res.render('game', {user: userProfile});
 });
 
@@ -104,7 +99,7 @@ io.on('connection', socket => {
   socket.on('readied', (user) => {
     allready = game.setReady(user);
     if (allready == -1){
-      io.emit('redirect', '/play');
+      io.emit('begingame');
     }
     else{
       io.emit('playerreadied', allready);
