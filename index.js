@@ -84,21 +84,19 @@ app.get('/auth/google/callback',
 });
 
 var pNum = 0;
-var game;
-var players = [];
+var game = new Game();
 io.on('connection', socket => {
   io.emit('reset');
   io.emit('number', pNum);
   pNum ++;
-  players.push(new Player(userProfile.displayName));
-  game = new Game(players);
-  sendCards({type: 'normal', color: game.color, number: game.number});
+  game.addPlayer(new Player(userProfile.displayName));
   socket.on('disconnect', () => {
     io.emit('reset');
   });
   socket.on('readied', (user) => {
     allready = game.setReady(user);
     if (allready == -1){
+      sendCards({type: 'normal', color: game.color, number: game.number});
       io.emit('begingame');
     }
     else{

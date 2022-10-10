@@ -1,6 +1,6 @@
 class Game{
-  constructor(players){
-    this.players = players;
+  constructor(){
+    this.players = [];
     this.turn = 0;
     this.dir = 1;
     this.color = 'red';
@@ -34,6 +34,9 @@ class Game{
   }
   stopWaiting(){
     this.waiting = false;
+  }
+  addPlayer(p){
+    this.players.push(p);
   }
   nextPlayer(){
     if (this.dir == -1 && this.turn == 0){
