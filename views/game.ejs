@@ -169,6 +169,9 @@
       socket.on('playerreadied', function(allready){
         numReady.innerHTML = '' + allready[0] + ' / ' + allready[1];
       })
+      socket.on('minimumplayers', function(allready){
+        numReady.innerHTML = '' + allready[1] + ' / ' + allready[2] + '<br />' + 'Minimum Player Saturation Not Yet Reached';
+      })
       function beginGame(){
         lobbySection.classList.add('hide');
         board.classList.remove('hide');

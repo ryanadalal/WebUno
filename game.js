@@ -1,5 +1,7 @@
 class Game{
   constructor(){
+    this.MINIMUM_PLAYERS = 1;
+
     this.players = [];
     this.turn = 0;
     this.dir = 1;
@@ -24,8 +26,13 @@ class Game{
       }
     }
     if (count == this.players.length){
-      this.playing = true;
-      return -1;
+      if(count >= this.MINIMUM_PLAYERS){
+        this.playing = true;
+        return -1;
+      }
+      else{
+        return [false, count, this.players.length];
+      }
     }
     else{
       return [count, this.players.length];
