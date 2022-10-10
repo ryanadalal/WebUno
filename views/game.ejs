@@ -177,5 +177,10 @@
         board.classList.remove('hide');
       }
     </script>
+    <script>
+      socket.on('rollcall', function(){
+        socket.emit('rollpresent', number);
+      })
+    </script>
   </body>
 </html>

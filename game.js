@@ -9,6 +9,12 @@ class Game{
     this.number = 0;
     this.playing = false;
   }
+  rollCall(){
+    this.disconnected_players = this.players;
+  }
+  markPresent(n){
+    this.players.splice(n, 1);
+  }
   isPlaying(){
     return !this.waiting;
   }
@@ -72,7 +78,7 @@ class Game{
   }
   isDisconnected(p){
     var p_indexes = [];
-    for (player of this.disconnected_players){
+    for (var player of this.disconnected_players){
       p_indexes.push(this.players.indexOf(player));
     }
     return p_indexes.indexOf(p);

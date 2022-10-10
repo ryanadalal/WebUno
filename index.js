@@ -95,8 +95,10 @@ var pNum = 0;
 var game = new Game(1);
 io.on('connection', socket => {
   socket.on('disconnect', () => {
-    io.emit('reset');
-    console.log(userProfile);
+    console.log('dissconnect');
+    io.emit('rollcall');
+    //put all players on disconnected list
+    game.rollCall();
   });
   io.emit('reset');
   if (!game.addPlayer(new Player(userProfile.displayName, userProfile.id))){
@@ -105,6 +107,9 @@ io.on('connection', socket => {
   io.emit('number', pNum);
   pNum ++;
   io.emit('playerreadied', game.setReady(-1));
+  socket.on('rollpresent', (user) => {
+    game.markPresent(user);
+  })
   socket.on('readied', (user) => {
     allready = game.setReady(user);
     if (allready == -1){
