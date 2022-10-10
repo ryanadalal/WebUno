@@ -159,6 +159,7 @@
       });
       socket.on('logInFailiure', function(){
         if (number == -1){
+          socket.disconnect();
           window.location.href = '/authFail';
         }
       })

@@ -98,7 +98,7 @@ io.on('connection', socket => {
     io.emit('reset');
   });
   io.emit('reset');
-  if (!game.addPlayer(new Player(userProfile.displayName))){
+  if (!game.addPlayer(new Player(userProfile.displayName, userProfile.id))){
     io.emit('logInFailiure');
   }
   io.emit('number', pNum);

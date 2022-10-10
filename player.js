@@ -1,12 +1,16 @@
 
 class Player{
-  constructor(name){
+  constructor(name, ID){
     this.cards = [];
     this.name = name;
+    this.ID = ID;
     this.ready = false;
     for(var i = 0; i < 7; i ++){
       this.getNewCard();
     }
+  }
+  getID(){
+    return this.ID;
   }
   setReady(){
     this.ready = true;
