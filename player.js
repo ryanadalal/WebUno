@@ -1,13 +1,17 @@
 
 class Player{
-  constructor(name, ID){
+  constructor(name, ID, pNum){
     this.cards = [];
     this.name = name;
     this.ID = ID;
+    this.pNum = pNum;
     this.ready = false;
     for(var i = 0; i < 7; i ++){
       this.getNewCard();
     }
+  }
+  getpNum(){
+    return this.pNum;
   }
   getID(){
     return this.ID;

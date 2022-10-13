@@ -12,11 +12,13 @@ class Game{
     this.playing = false;
   }
   rollCall(){
-    this.disconnected_players = this.players;
+    this.disconnected_players = this.players.map((x) => x);;
+    console.log('roll call ' + this.disconnected_players + this.players);
   }
   markPresent(n){
+    console.log('before splice ' + this.players);
     this.disconnected_players.splice(n, 1);
-    console.log('dissconnected', this.disconnected_players);
+    console.log('mark present ' + this.disconnected_players + this.players);
   }
   getDisconnected(){
     return this.disconnected_players;
@@ -57,12 +59,25 @@ class Game{
     this.waiting = false;
   }
   addPlayer(p){
+    console.log('addplayer og ' + p.getpNum());
+    console.log("player length" + this.players.length);
     for(var p2 of this.players){
-      if (p.getID() == p2.getID())
-        return false
+      console.log('addlpayer ' + p2.getpNum());
+      if (p.getID() == p2.getID()){
+        for(var dp of this.players){
+          if (dp.getID() == p2.getID()){
+            this.markPresent(p);
+            console.log('added ' + p.getpNum());
+            return -p.getpNum();
+          }
+        }
+        console.log('added 1')
+        return 1
+      }
     }
     this.players.push(p);
-    return true;
+    console.log('added 2    ' + this.players.length)
+    return 2;
   }
   nextPlayer(){
     function determineNext(g){
@@ -77,10 +92,9 @@ class Game{
       }
     }
     var next = determineNext(this);
-    console.log(next);
-    console.log(this.players);
     //PLAYER IDS ARE ALL THE SAME??????
     //sdifjdlkfjslkdf
+    //player is beign removed somehow
     while (this.isDisconnected(next) != -1){
       next = determineNext(this);
     }
@@ -91,7 +105,6 @@ class Game{
     for (var player of this.disconnected_players){
       p_indexes.push(this.players.indexOf(player));
     }
-    //console.log(p_indexes);
     return p_indexes.indexOf(p);
   }
   drawCard(n){
@@ -106,7 +119,6 @@ class Game{
     var c = {};
     var gc = false;
     if(user == this.turn && !this.waiting){
-      console.log('it is this turn')
       var success = false;
       if(cid.includes(this.color)){
         c.color = this.color;
@@ -192,9 +204,9 @@ class Game{
         var t = this.turn;
         if(skipExtra)
           this.turn = this.nextPlayer();
+        console.log(this.players);
         this.players[this.turn].removeCard(c);
         this.turn = this.nextPlayer();
-        console.log(this.turn);
         if(gc)
           return "getColor" + t;
         return c;

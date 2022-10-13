@@ -172,6 +172,10 @@
       socket.on('minimumplayers', function(allready){
         numReady.innerHTML = '' + allready[1] + ' / ' + allready[2] + '<br />' + 'Minimum Player Saturation Not Yet Reached';
       })
+      socket.on('bypasslobby', function(num){
+        if(number == num)
+          beginGame();
+      });
       function beginGame(){
         lobbySection.classList.add('hide');
         board.classList.remove('hide');

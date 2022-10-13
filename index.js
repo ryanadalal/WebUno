@@ -101,15 +101,21 @@ io.on('connection', socket => {
     game.rollCall();
   });
   io.emit('reset');
-  if (!game.addPlayer(new Player(userProfile.displayName, userProfile.id))){
+  var added = game.addPlayer(new Player(userProfile.displayName, userProfile.id, pNum));
+  if (added == 1){
     io.emit('logInFailiure');
   }
-  io.emit('number', pNum);
-  pNum ++;
+  else if(added <= 0){
+    io.emit('number', -1 * added)
+    io.emit('bypasslobby', -1 * added)
+  }
+  else if(added == 2){
+    io.emit('number', pNum);
+    pNum ++;
+  }
   io.emit('playerreadied', game.setReady(-1));
   socket.on('rollpresent', (user) => {
     game.markPresent(user);
-    console.log(game.getDisconnected(), game.turn);
   })
   socket.on('readied', (user) => {
     allready = game.setReady(user);
